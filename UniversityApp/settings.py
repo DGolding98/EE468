@@ -75,11 +75,17 @@ WSGI_APPLICATION = 'UniversityApp.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'mysql.connector.django',
+#        'ENGINE': 'mysql.connector.django',
+#        'NAME': 'university',
+#        'USER': 'root',
+#        'PASSWORD': 'root',
+#        'HOST': 'localhost'
+		'ENGINE': 'django.db.backends.mysql',
         'NAME': 'university',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': 'localhost'
+        'USER': 'testuser',
+        'PASSWORD': 'tester123',
+        'HOST': '3.12.215.149',
+        'PORT': '3306',
     }
 }
 
