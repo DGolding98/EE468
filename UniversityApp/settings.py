@@ -75,11 +75,11 @@ WSGI_APPLICATION = 'UniversityApp.wsgi.application'
 
 DATABASES = {
     'default': {
-#        'ENGINE': 'mysql.connector.django',
-#        'NAME': 'university',
-#        'USER': 'root',
-#        'PASSWORD': 'root',
-#        'HOST': 'localhost'
+       # 'ENGINE': 'mysql.connector.django',
+       # 'NAME': 'university',
+       # 'USER': 'root',
+       # 'PASSWORD': 'ledzepp56',
+       # 'HOST': 'localhost'
 		'ENGINE': 'django.db.backends.mysql',
         'NAME': 'university',
         'USER': 'testuser',
@@ -127,4 +127,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home' # new
