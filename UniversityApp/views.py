@@ -1,12 +1,13 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
+from django.contrib.auth import authenticate, login
 import mysql.connector
 from django.views.decorators.csrf import csrf_exempt
 
-def index(request):
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import permission_required
 
-    return HttpResponse("Welcome to the University Database.\nPlease log in:")
-
+@permission_required("student")
 def student(request):
     form = '<!DOCTYPE html>' + \
         '<html>' + \
@@ -27,6 +28,7 @@ def student(request):
 
     return HttpResponse(form)
 
+@login_required
 @csrf_exempt
 def studentResult(request):
     mydb = mysql.connector.connect(
