@@ -93,6 +93,7 @@ def professorStudents(request):
     department = request.POST['courseID']
     semester = request.POST['semester']
     year = request.POST['year']
+<<<<<<< HEAD
     query = "select takes.course_id as course_id, name, sec_id, takes.semester as semester, takes.year as year" + \
             " from student join takes where student.id=takes.id;"
     mycursor.execute(query)
@@ -116,6 +117,9 @@ def professorStudents(request):
     mydb.close()
 
     return HttpResponse(data)
+=======
+    return HttpResponse("Professor: View students")
+>>>>>>> 6b285e002c9fc1915879454541bce91568b64686
 
 
 def student(request):
@@ -179,6 +183,146 @@ def studentResult(request):
              '<th>' + str(semester) + '</th>' +
              '<th>' + str(year) + '</th>' +
              '</t>')
+        data += r
+    data += '</table>'
+
+    mycursor.close()
+    mydb.close()
+
+    return HttpResponse(data)
+
+
+def administrator(request):
+    form = '<!DOCTYPE html>' + \
+        '<html>' + \
+        '<body>' + \
+        '<h1>Administrator:</h1>' + \
+        '<h3> Choose which following Functions to perform: </h3>' + \
+        '<form action="f1/" method="post">' + \
+            '<p> F1. Create a list of professors sorted by: <p>' + \
+            '<INPUT TYPE=radio NAME="sort_method" VALUE="name" CHECKED> Name</LABEL><BR>' + \
+            '<INPUT TYPE=radio NAME="sort_method" VALUE="dept"> Department</LABEL><BR>' + \
+            '<INPUT TYPE=radio NAME="sort_method" VALUE="salary"> Salary</LABEL>' + \
+            '<p> </p>' + \
+            '<input type="submit" value = "View professors">' + \
+        '</form><br><br>' + \
+        '<form action="f2/" method="post">' + \
+            '<p> F2. Create a table of the min/max/average salaries of a department: <p>' + \
+            '<input type-"text" id="department" name="department"><br><br>' + \
+            '<input type="submit" value = "View salaries">' + \
+        '</form><br><br>' + \
+        '<form action="f3/" method="post">' + \
+            '<p> F3. Create a table of professors, their department and how many students they taught in a given semester: <p>' + \
+            '<input type-"text" id="semester" name="semester"><br><br>' + \
+            '<input type="submit" value = "View professors">' + \
+        '</form>' + \
+        '<p>Choose a function above.</p>' + \
+        '</body>' + \
+        '</html>'
+
+    return HttpResponse(form)
+
+
+@csrf_exempt
+def f1(request):
+    mydb = mysql.connector.connect(
+            host = "localhost",
+            user = "root",
+            passwd = "YES",
+            auth_plugin = "mysql_native_password",
+            database = "university",
+            )
+    
+    mycursor = mydb.cursor()
+
+    sort_method = request.POST['sort_method']
+    query = "select * from instructor" + \
+    " order by\"" + sort_method + "\";"
+    mycursor.execute(query)
+
+    data='<title>Administrator Info</title>'
+    data='<h1>Results:</h1>'
+    data += '<table style="width:400px">'
+    for (ID, name, dept, salary) in mycursor:
+        r = ('<tr>' + \
+                '<th>' + str(ID) + '</th>' + \
+                '<th>' + name + '</th>' + \
+                '<th>' + dept + '</th>' + \
+                '<th>' + str(salary) + '</th>' + \
+                '</t>')
+        data += r
+    data += '</table>'
+
+    mycursor.close()
+    mydb.close()
+
+    return HttpResponse(data)
+
+
+@csrf_exempt
+def f2(request):
+    mydb = mysql.connector.connect(
+            host = "localhost",
+            user = "root",
+            passwd = "YES",
+            auth_plugin = "mysql_native_password",
+            database = "university",
+            )
+    
+    mycursor = mydb.cursor()
+
+    department = request.POST['department']
+    query = "select MAX(salary), MIN(salary), AVG(salary)" + \
+    " from instructor"
+    " where instructor.dept = \"" + department + "\";" + \
+    mycursor.execute(query)
+
+    data='<title>Administrator Info</title>'
+    data='<h1>Results:</h1>'
+    data += '<table style="width:400px">'
+    for (max, min, avg) in mycursor:
+        r = ('<tr>' + \
+                '<th>' + str(max) + '</th>' + \
+                '<th>' + str(min) + '</th>' + \
+                '<th>' + str(avg) + '</th>' + \
+                '</t>')
+        data += r
+    data += '</table>'
+
+    mycursor.close()
+    mydb.close()
+
+    return HttpResponse(data)
+
+
+@csrf_exempt
+def f3(request):
+    mydb = mysql.connector.connect(
+            host = "localhost",
+            user = "root",
+            passwd = "YES",
+            auth_plugin = "mysql_native_password",
+            database = "university",
+            )
+    
+    mycursor = mydb.cursor()
+
+    semester = request.POST['semester']
+    query = "select I.name, I.dept, COUNT(S.name)" + \
+    "from instructor I, student S, teaches T, takes R" + \
+    "where I.ID = T.id AND T.course_id = R.course_id AND R.id = S.ID" + \
+    "and R.semester = \"" + semester + "\";" + \
+    mycursor.execute(query)
+
+    data='<title>Administrator Info</title>'
+    data='<h1>Results:</h1>'
+    data += '<table style="width:400px">'
+    for (name, dept, count) in mycursor:
+        r = ('<tr>' + \
+                '<th>' + name + '</th>' + \
+                '<th>' + dept + '</th>' + \
+                '<th>' + str(COUNT(S.name)) + '</th>' + \
+                '</t>')
         data += r
     data += '</table>'
 
