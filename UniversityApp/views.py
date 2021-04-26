@@ -89,7 +89,25 @@ def professorStudents(request):
     department = request.POST['courseID']
     semester = request.POST['semester']
     year = request.POST['year']
-    return HttpResponse("Professor: View students")
+    query = "select takes.course_id as course_id, name, sec_id from student join takes where student.id=takes.id;"
+    mycursor.execute(query)
+
+    data = '<h1>Students:</h1>'
+    data += '<table style="width:800px">'
+    data += '<tr><th>Course ID</th> <th>Student name</th> <th>Section</th></tr>'
+    for (course_id, name, sec_id) in mycursor:
+        r = ('<tr>' +
+             '<th>' + str(course_id) + '</th>' +
+             '<th>' + str(name) + '</th>' +
+             '<th>' + str(sec_id) + '</th>' +
+             '</t>')
+        data += r
+    data += '</table>'
+
+    mycursor.close()
+    mydb.close()
+
+    return HttpResponse(data)
 
 
 def student(request):
