@@ -14,12 +14,10 @@ def professor(request):
         '<body>' + \
         '<h1>Professor:</h1>' + \
         '<form action="courses/" method="post">' + \
-            '<input type-"text" id="ID" name="ID">' + \
-            '<label for="ID"> Teacher ID</label><br>' + \
-            '<input type-"text" id="semester" name="semester">' + \
-            '<label for="semester"> Semester [1 for fall, 2 for spring]</label><br>' + \
-            '<input type-"text" id="year" name="year">' + \
-            '<label for="year"> Year [XXXX]</label><br>' + \
+            '<input type-"text" id="course_id" name="course_id">' + \
+            '<label for="course_id"> Course ID</label><br>' + \
+            '<input type-"text" id="sec_id" name="sec_id">' + \
+            '<label for="sec_id"> Section</label><br>' + \
             '<input type="submit" value = "View courses">' + \
         '</form><br><br>' + \
         '<form action="students/" method="post">' + \
@@ -50,19 +48,25 @@ def professorCourses(request):
 
     mycursor = mydb.cursor()
 
-    lastName = request.POST['ID']
-    semester = request.POST['semester']
-    year = request.POST['year']
-    query = "select C.course_id as course_id, count(C.course_id) as count from (select course.course_id, takes.id" + \
-            " from course join takes where course.course_id=takes.course_id) C group by C.course_id;"
+    course_id = request.POST['course_id']
+    section = request.POST['sec_id']
+    query = "select C.course_id as course_id, C.sec_id as sec_id, count(C.course_id) as count " \
+            "from (select course.course_id, takes.id, takes.sec_id from course join takes " \
+            "where course.course_id=takes.course_id) C group by course_id, sec_id"
+    if course_id != "":
+        query += " and course_id=\"" + course_id + "\""
+    if section != "":
+        query += " and sec_id=\"" + section + "\""
+    query += ";"
     mycursor.execute(query)
 
     data = '<h1>Courses:</h1>'
     data += '<table style="width:800px">'
-    data += '<tr><th>Course ID</th> <th>Number of Students</th></tr>'
-    for (course_id, count) in mycursor:
+    data += '<tr><th>Course ID</th> <th>Section ID</th> <th>Number of Students</th></tr>'
+    for (course_id, sec_id, count) in mycursor:
         r = ('<tr>' +
              '<th>' + str(course_id) + '</th>' +
+             '<th>' + str(sec_id) + '</th>' +
              '<th>' + str(count) + '</th>' +
              '</t>')
         data += r
@@ -89,17 +93,21 @@ def professorStudents(request):
     department = request.POST['courseID']
     semester = request.POST['semester']
     year = request.POST['year']
-    query = "select takes.course_id as course_id, name, sec_id from student join takes where student.id=takes.id;"
+    query = "select takes.course_id as course_id, name, sec_id, takes.semester as semester, takes.year as year" + \
+            " from student join takes where student.id=takes.id;"
     mycursor.execute(query)
 
     data = '<h1>Students:</h1>'
     data += '<table style="width:800px">'
-    data += '<tr><th>Course ID</th> <th>Student name</th> <th>Section</th></tr>'
-    for (course_id, name, sec_id) in mycursor:
+    data += '<tr><th>Course ID</th> <th>Student name</th> <th>Section</th>' + \
+            '<th>Semester</th> <th>Year</th></tr>'
+    for (course_id, name, sec_id, semester, year) in mycursor:
         r = ('<tr>' +
              '<th>' + str(course_id) + '</th>' +
              '<th>' + str(name) + '</th>' +
              '<th>' + str(sec_id) + '</th>' +
+             '<th>' + str(semester) + '</th>' +
+             '<th>' + str(year) + '</th>' +
              '</t>')
         data += r
     data += '</table>'
