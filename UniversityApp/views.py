@@ -1,14 +1,18 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 import mysql.connector
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import redirect
+from django.contrib.auth import authenticate
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import permission_required
 
-
-def index(request):
-    return HttpResponse("Welcome to the University Database.\nPlease log in:")
-
-
+@login_required
 def professor(request):
+
+    if not (request.user.username == 'instructor' or request.user.username == 'admin'):
+        return redirect('/login/?next=%s' % request.path)
+
     form = '<!DOCTYPE html>' + \
         '<html>' + \
         '<body>' + \
@@ -35,13 +39,15 @@ def professor(request):
 
     return HttpResponse(form)
 
-
+@login_required
 @csrf_exempt
 def professorCourses(request):
+    if not (request.user.username == 'instructor' or request.user.username == 'admin'):
+        return redirect('/login/?next=%s' % request.path)
     mydb = mysql.connector.connect(
         host="localhost",
         user="root",
-        passwd="root",
+        passwd="ledzepp56",
         auth_plugin="mysql_native_password",
         database="university",
     )
@@ -77,13 +83,15 @@ def professorCourses(request):
 
     return HttpResponse(data)
 
-
+@login_required
 @csrf_exempt
 def professorStudents(request):
+    if not (request.user.username == 'instructor' or request.user.username == 'admin'):
+        return redirect('/login/?next=%s' % request.path)
     mydb = mysql.connector.connect(
         host="localhost",
         user="root",
-        passwd="root",
+        passwd="ledzepp56",
         auth_plugin="mysql_native_password",
         database="university",
     )
@@ -93,7 +101,6 @@ def professorStudents(request):
     department = request.POST['courseID']
     semester = request.POST['semester']
     year = request.POST['year']
-<<<<<<< HEAD
     query = "select takes.course_id as course_id, name, sec_id, takes.semester as semester, takes.year as year" + \
             " from student join takes where student.id=takes.id;"
     mycursor.execute(query)
@@ -117,12 +124,13 @@ def professorStudents(request):
     mydb.close()
 
     return HttpResponse(data)
-=======
     return HttpResponse("Professor: View students")
->>>>>>> 6b285e002c9fc1915879454541bce91568b64686
 
-
+@login_required
 def student(request):
+    if not (request.user.username == 'student' or request.user.username == 'instructor' or request.user.username == 'admin'):
+        return redirect('/login/?next=%s' % request.path)
+
     form = '<!DOCTYPE html>' + \
            '<html>' + \
            '<body>' + \
@@ -142,13 +150,15 @@ def student(request):
 
     return HttpResponse(form)
 
-
+@login_required
 @csrf_exempt
 def studentResult(request):
+    if not (request.user.username == 'student' or request.user.username == 'instructor' or request.user.username == 'admin'):
+        return redirect('/login/?next=%s' % request.path)
     mydb = mysql.connector.connect(
         host="localhost",
         user="root",
-        passwd="root",
+        passwd="ledzepp56",
         auth_plugin="mysql_native_password",
         database="university",
     )
@@ -177,8 +187,8 @@ def studentResult(request):
     for (course_id, sec_id, title, dept_name, semester, year) in mycursor:
         r = ('<tr>' +
              '<th>' + str(course_id) + '</th>' +
-             '<th>' + title + '</th>' +
-             '<th>' + dept_name + '</th>' +
+             '<th>' + str(title) + '</th>' +
+             '<th>' + str(dept_name) + '</th>' +
              '<th>' + str(sec_id) + '</th>' +
              '<th>' + str(semester) + '</th>' +
              '<th>' + str(year) + '</th>' +
@@ -191,8 +201,11 @@ def studentResult(request):
 
     return HttpResponse(data)
 
-
+@login_required
 def administrator(request):
+    if not (request.user.username == 'admin'):
+        return redirect('/login/?next=%s' % request.path)
+
     form = '<!DOCTYPE html>' + \
         '<html>' + \
         '<body>' + \
@@ -222,13 +235,15 @@ def administrator(request):
 
     return HttpResponse(form)
 
-
+@login_required
 @csrf_exempt
 def f1(request):
+    if not (request.user.username == 'admin'):
+        return redirect('/login/?next=%s' % request.path)
     mydb = mysql.connector.connect(
             host = "localhost",
             user = "root",
-            passwd = "YES",
+            passwd = "ledzepp56",
             auth_plugin = "mysql_native_password",
             database = "university",
             )
@@ -246,8 +261,8 @@ def f1(request):
     for (ID, name, dept, salary) in mycursor:
         r = ('<tr>' + \
                 '<th>' + str(ID) + '</th>' + \
-                '<th>' + name + '</th>' + \
-                '<th>' + dept + '</th>' + \
+                '<th>' + str(name) + '</th>' + \
+                '<th>' + str(dept) + '</th>' + \
                 '<th>' + str(salary) + '</th>' + \
                 '</t>')
         data += r
@@ -258,13 +273,15 @@ def f1(request):
 
     return HttpResponse(data)
 
-
+@login_required
 @csrf_exempt
 def f2(request):
+    if not (request.user.username == 'admin'):
+        return redirect('/login/?next=%s' % request.path)
     mydb = mysql.connector.connect(
             host = "localhost",
             user = "root",
-            passwd = "YES",
+            passwd = "ledzepp56",
             auth_plugin = "mysql_native_password",
             database = "university",
             )
@@ -294,13 +311,15 @@ def f2(request):
 
     return HttpResponse(data)
 
-
+@login_required
 @csrf_exempt
 def f3(request):
+    if not (request.user.username == 'admin'):
+        return redirect('/login/?next=%s' % request.path)
     mydb = mysql.connector.connect(
             host = "localhost",
             user = "root",
-            passwd = "YES",
+            passwd = "ledzepp56",
             auth_plugin = "mysql_native_password",
             database = "university",
             )
@@ -319,8 +338,8 @@ def f3(request):
     data += '<table style="width:400px">'
     for (name, dept, count) in mycursor:
         r = ('<tr>' + \
-                '<th>' + name + '</th>' + \
-                '<th>' + dept + '</th>' + \
+                '<th>' + str(name) + '</th>' + \
+                '<th>' + str(dept) + '</th>' + \
                 '<th>' + str(COUNT(S.name)) + '</th>' + \
                 '</t>')
         data += r

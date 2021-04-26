@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+  Welcome, {{ user.username }}!
+  {% if user.username == "student" %}
+	<p><a href="{% url 'student' %}">Student</a></p>
+	<p><a href="{% url 'logout' %}">Log Out</a></p>
+  {% elif user.username == "admin" %}
+    <p>you are admin</p>
+    <p><a href="{% url 'student' %}">Student</a></p>
+    <p><a href="{% url 'professor' %}">Professor</a></p>
+    <p><a href="{% url 'admin' %}">Admin</a></p>
+	<p><a href="{% url 'logout' %}">Log Out</a></p>
+  {% elif user.username == "instructor" %}
+    <p>you are instructor</p>
+    <p><a href="{% url 'student' %}">Student</a></p>
+	<p><a href="{% url 'professor' %}">Professor</a></p>
+	<p><a href="{% url 'logout' %}">Log Out</a></p>
+  {% else %}
+    <p><a href="{% url 'student' %}">Student</a></p>
+	<p><a href="{% url 'logout' %}">Log Out</a></p>
+  {% endif %}
+
+{% else %}
+  <p>You are not logged in.</p>
+  <a href="{% url 'login' %}">Log In</a>
+{% endif %}
+{% endblock %}
