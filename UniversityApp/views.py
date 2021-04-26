@@ -276,8 +276,6 @@ def f1(request):
 @login_required
 @csrf_exempt
 def f2(request):
-    if not (request.user.username == 'admin'):
-        return redirect('/login/?next=%s' % request.path)
     mydb = mysql.connector.connect(
             host = "localhost",
             user = "root",
@@ -285,14 +283,12 @@ def f2(request):
             auth_plugin = "mysql_native_password",
             database = "university",
             )
-    
     mycursor = mydb.cursor()
-
-    department = request.POST['department']
+    dept = request.POST['department']
     query = "select MAX(salary), MIN(salary), AVG(salary)" + \
-    " from instructor"
-    " where instructor.dept = \"" + department + "\";" + \
-    mycursor.execute(query)
+    " from instructor " + \
+    "where instructor.dept_name = \"" + dept + "\";"
+    mycursor.execute(query) 
 
     data='<title>Administrator Info</title>'
     data='<h1>Results:</h1>'
