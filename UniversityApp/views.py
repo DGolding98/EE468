@@ -1,14 +1,20 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate
 import mysql.connector
 from django.views.decorators.csrf import csrf_exempt
+
+from django.shortcuts import redirect
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import permission_required
 
-@permission_required("student")
+@login_required
 def student(request):
+
+    if not request.user.username == 'student':
+        return redirect('/login/?next=%s' % request.path)
+        
     form = '<!DOCTYPE html>' + \
         '<html>' + \
         '<body>' + \
@@ -28,9 +34,12 @@ def student(request):
 
     return HttpResponse(form)
 
+
 @login_required
 @csrf_exempt
 def studentResult(request):
+    if not request.user.username == 'student':
+        return redirect('/login/?next=%s' % request.path)
     mydb = mysql.connector.connect(
             host = "localhost",
             user = "root",
