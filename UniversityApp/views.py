@@ -93,7 +93,7 @@ def professorStudents(request):
     department = request.POST['courseID']
     semester = request.POST['semester']
     year = request.POST['year']
-<<<<<<< HEAD
+
     query = "select takes.course_id as course_id, name, sec_id, takes.semester as semester, takes.year as year" + \
             " from student join takes where student.id=takes.id;"
     mycursor.execute(query)
@@ -117,9 +117,6 @@ def professorStudents(request):
     mydb.close()
 
     return HttpResponse(data)
-=======
-    return HttpResponse("Professor: View students")
->>>>>>> 6b285e002c9fc1915879454541bce91568b64686
 
 
 def student(request):
