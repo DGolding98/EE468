@@ -47,8 +47,8 @@ def professorCourses(request):
     mydb = mysql.connector.connect(
         host="localhost",
         user="root",
-        passwd="root",
-        # passwd="ledzepp56",
+        # passwd="root",
+        passwd="ledzepp56",
         auth_plugin="mysql_native_password",
         database="university",
     )
@@ -96,8 +96,8 @@ def professorStudents(request):
     mydb = mysql.connector.connect(
         host="localhost",
         user="root",
-        passwd="root",
-        # passwd="ledzepp56",
+        # passwd="root",
+        passwd="ledzepp56",
         auth_plugin="mysql_native_password",
         database="university",
     )
@@ -177,8 +177,8 @@ def studentResult(request):
     mydb = mysql.connector.connect(
         host="localhost",
         user="root",
-        passwd="root",
-        # passwd="ledzepp56",
+        # passwd="root",
+        passwd="ledzepp56",
         auth_plugin="mysql_native_password",
         database="university",
     )
@@ -263,8 +263,8 @@ def f1(request):
     mydb = mysql.connector.connect(
             host = "localhost",
             user = "root",
-            passwd="root",
-            # passwd="ledzepp56",
+            # passwd="root",
+            passwd="ledzepp56",
             auth_plugin = "mysql_native_password",
             database = "university",
             )
@@ -300,8 +300,8 @@ def f2(request):
     mydb = mysql.connector.connect(
             host = "localhost",
             user = "root",
-            passwd="root",
-            # passwd="ledzepp56",
+            # passwd="root",
+            passwd="ledzepp56",
             auth_plugin = "mysql_native_password",
             database = "university",
             )
@@ -337,8 +337,8 @@ def f3(request):
     mydb = mysql.connector.connect(
             host = "localhost",
             user = "root",
-            passwd="root",
-            # passwd="ledzepp56",
+            # passwd="root",
+            passwd="ledzepp56",
             auth_plugin = "mysql_native_password",
             database = "university",
             )
@@ -346,9 +346,9 @@ def f3(request):
     mycursor = mydb.cursor()
 
     semester = request.POST['semester']
-    query = "select I.name, I.dept, COUNT(S.name)" + \
-    "from instructor I, student S, teaches T, takes R" + \
-    "where I.ID = T.id AND T.course_id = R.course_id AND R.id = S.ID" + \
+    query = "select I.name, I.dept_name, COUNT(S.name) " + \
+    "from instructor I, student S, teaches T, takes R " + \
+    "where I.ID = T.id AND T.course_id = R.course_id AND R.id = S.ID " + \
     "and R.semester = \"" + semester + "\";"
     mycursor.execute(query)
 
@@ -359,7 +359,7 @@ def f3(request):
         r = ('<tr>' + \
                 '<th>' + str(name) + '</th>' + \
                 '<th>' + str(dept) + '</th>' + \
-                '<th>' + str(COUNT(S.name)) + '</th>' + \
+                '<th>' + str(count) + '</th>' + \
                 '</t>')
         data += r
     data += '</table>'
