@@ -25,8 +25,8 @@ def professor(request):
             '<input type="submit" value = "View courses">' + \
         '</form><br><br>' + \
         '<form action="students/" method="post">' + \
-            '<input type-"text" id="courseID" name="courseID">' + \
-            '<label for="courseID"> Course ID</label><br>' + \
+            '<input type-"text" id="instructor_name" name="instructor_name">' + \
+            '<label for="instructor_name"> Instructor Last Name</label><br>' + \
             '<input type-"text" id="semester" name="semester">' + \
             '<label for="semester"> Semester [1 for fall, 2 for spring]</label><br>' + \
             '<input type-"text" id="year" name="year">' + \
@@ -104,24 +104,38 @@ def professorStudents(request):
 
     mycursor = mydb.cursor()
 
-    department = request.POST['courseID']
+    instructor = request.POST['instructor_name']
     semester = request.POST['semester']
     year = request.POST['year']
-    query = "select takes.course_id as course_id, name, sec_id, takes.semester as semester, takes.year as year" + \
-            " from student join takes where student.id=takes.id;"
+    query = "select courses.course_id course_id, courses.sec_id sec_id, courses.semester semester, courses.year year," \
+            " courses.name name, teaches.id teacher_id, instructor.name instructor from teaches join instructor" \
+            " join (select student.name name, course_id, sec_id, semester, year from student join takes" \
+            " where student.id=takes.id) as courses where courses.course_id=teaches.course_id" \
+            " and courses.semester=teaches.semester and courses.year=teaches.year and courses.sec_id=teaches.sec_id" \
+            " and teaches.id=instructor.ID"
+
+    if instructor != "":
+        query += " and instructor.name=\"" + instructor + "\""
+    if semester != "":
+        query += " and courses.semester=" + semester
+    if year != "":
+        query += " and courses.year=" + year
+    query += ";"
     mycursor.execute(query)
 
     data = '<h1>Students:</h1>'
     data += '<table style="width:800px">'
-    data += '<tr><th>Course ID</th> <th>Student name</th> <th>Section</th>' + \
-            '<th>Semester</th> <th>Year</th></tr>'
-    for (course_id, name, sec_id, semester, year) in mycursor:
+    data += '<tr><th>Course ID</th> <th>Section ID</th> <th>Student Name</th>' + \
+            '<th>Semester</th> <th>Year</th> <th>Instructor ID</th> <th>Instructor</th></tr>'
+    for (course_id, sec_id, semester, year, name, teacher_id, instructor) in mycursor:
         r = ('<tr>' +
              '<th>' + str(course_id) + '</th>' +
-             '<th>' + str(name) + '</th>' +
              '<th>' + str(sec_id) + '</th>' +
+             '<th>' + str(name) + '</th>' +
              '<th>' + str(semester) + '</th>' +
              '<th>' + str(year) + '</th>' +
+             '<th>' + str(teacher_id) + '</th>' +
+             '<th>' + str(instructor) + '</th>' +
              '</t>')
         data += r
     data += '</table>'
@@ -141,12 +155,12 @@ def student(request):
            '<body>' + \
            '<h1>Display Courses</h1>' + \
            '<form action="studentResult/" method="post">' + \
-           '<label for="department">Department </label>' + \
-           '<input type-"text" id="department" name="department"><br><br>' + \
-           '<label for="semester">Semester [1 for fall, 2 for spring] </label>' + \
-           '<input type-"text" id="semester" name="semester"><br><br>' + \
-           '<label for="year">Year [XXXX] </label>' + \
-           '<input type-"text" id="year" name="year"><br><br>' + \
+           '<input type-"text" id="department" name="department">' + \
+           '<label for="department"> Department</label><br><br>' + \
+           '<input type-"text" id="semester" name="semester">' + \
+           '<label for="semester"> Semester [1 for fall, 2 for spring]</label><br><br>' + \
+           '<input type-"text" id="year" name="year">' + \
+           '<label for="year"> Year [XXXX]</label><br><br>' + \
            '<input type="submit" value = "Submit">' + \
            '</form>' + \
            '<p>Click on the submit button to submit the form.</p>' + \
