@@ -3,7 +3,7 @@ from django.template import loader
 import mysql.connector
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import permission_required
 
@@ -34,6 +34,7 @@ def professor(request):
             '<input type="submit" value="View students">' + \
         '</form>' + \
         '<p>Choose what to do.</p>' + \
+        '<p><a href="/accounts/login/">Log Out</a></p>' + \
         '</body>' + \
         '</html>'
 
@@ -145,6 +146,7 @@ def professorStudents(request):
 
     return HttpResponse(data)
 
+@csrf_exempt
 @login_required
 def student(request):
     if not (request.user.username == 'student' or request.user.username == 'instructor' or request.user.username == 'admin'):
@@ -164,8 +166,9 @@ def student(request):
            '<input type="submit" value = "Submit">' + \
            '</form>' + \
            '<p>Click on the submit button to submit the form.</p>' + \
-           '</body>' + \
+           '<p><a href="/accounts/login/">Log Out</a></p>' + \
            '</html>'
+
 
     return HttpResponse(form)
 
@@ -250,6 +253,7 @@ def administrator(request):
             '<input type="submit" value = "View professors">' + \
         '</form>' + \
         '<p>Choose a function above.</p>' + \
+        '<p><a href="/accounts/login/">Log Out</a></p>' + \
         '</body>' + \
         '</html>'
 
