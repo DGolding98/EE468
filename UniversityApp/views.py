@@ -47,7 +47,8 @@ def professorCourses(request):
     mydb = mysql.connector.connect(
         host="localhost",
         user="root",
-        passwd="ledzepp56",
+        passwd="root",
+        # passwd="ledzepp56",
         auth_plugin="mysql_native_password",
         database="university",
     )
@@ -56,14 +57,18 @@ def professorCourses(request):
 
     course_id = request.POST['course_id']
     section = request.POST['sec_id']
-    query = "select C.course_id as course_id, C.sec_id as sec_id, count(C.course_id) as count " \
-            "from (select course.course_id, takes.id, takes.sec_id from course join takes " \
-            "where course.course_id=takes.course_id) C group by course_id, sec_id"
+    query = "select course_id, section, count(course_id) from" \
+            " (select course.course_id as course_id, takes.id as student_id, takes.sec_id as section from " \
+            "course join takes where course.course_id=takes.course_id) as courses" \
+
     if course_id != "":
-        query += " and course_id=\"" + course_id + "\""
+        query += " where course_id=\"" + course_id + "\""
     if section != "":
-        query += " and sec_id=\"" + section + "\""
-    query += ";"
+        if course_id != "":
+            query += " and section=" + section
+        else:
+            query += " where section=" + section
+    query += " group by course_id, section;"
     mycursor.execute(query)
 
     data = '<h1>Courses:</h1>'
@@ -91,7 +96,8 @@ def professorStudents(request):
     mydb = mysql.connector.connect(
         host="localhost",
         user="root",
-        passwd="ledzepp56",
+        passwd="root",
+        # passwd="ledzepp56",
         auth_plugin="mysql_native_password",
         database="university",
     )
@@ -124,7 +130,6 @@ def professorStudents(request):
     mydb.close()
 
     return HttpResponse(data)
-    return HttpResponse("Professor: View students")
 
 @login_required
 def student(request):
@@ -158,7 +163,8 @@ def studentResult(request):
     mydb = mysql.connector.connect(
         host="localhost",
         user="root",
-        passwd="ledzepp56",
+        passwd="root",
+        # passwd="ledzepp56",
         auth_plugin="mysql_native_password",
         database="university",
     )
@@ -243,7 +249,8 @@ def f1(request):
     mydb = mysql.connector.connect(
             host = "localhost",
             user = "root",
-            passwd = "ledzepp56",
+            passwd="root",
+            # passwd="ledzepp56",
             auth_plugin = "mysql_native_password",
             database = "university",
             )
@@ -279,7 +286,8 @@ def f2(request):
     mydb = mysql.connector.connect(
             host = "localhost",
             user = "root",
-            passwd = "ledzepp56",
+            passwd="root",
+            # passwd="ledzepp56",
             auth_plugin = "mysql_native_password",
             database = "university",
             )
@@ -315,7 +323,8 @@ def f3(request):
     mydb = mysql.connector.connect(
             host = "localhost",
             user = "root",
-            passwd = "ledzepp56",
+            passwd="root",
+            # passwd="ledzepp56",
             auth_plugin = "mysql_native_password",
             database = "university",
             )
@@ -326,7 +335,7 @@ def f3(request):
     query = "select I.name, I.dept, COUNT(S.name)" + \
     "from instructor I, student S, teaches T, takes R" + \
     "where I.ID = T.id AND T.course_id = R.course_id AND R.id = S.ID" + \
-    "and R.semester = \"" + semester + "\";" + \
+    "and R.semester = \"" + semester + "\";"
     mycursor.execute(query)
 
     data='<title>Administrator Info</title>'

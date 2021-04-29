@@ -78,7 +78,7 @@ DATABASES = {
        'ENGINE': 'mysql.connector.django',
        'NAME': 'university',
        'USER': 'root',
-       'PASSWORD': 'ledzepp56',
+       'PASSWORD': 'root',
        'HOST': 'localhost'
 		# 'ENGINE': 'django.db.backends.mysql',
         # 'NAME': 'university',
