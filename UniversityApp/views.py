@@ -282,8 +282,9 @@ def f1(request):
     mycursor = mydb.cursor()
 
     sort_method = request.POST['sort_method']
-    query = "select * from instructor" + \
-    " order by\"" + sort_method + "\";"
+    query = "select * from instructor"
+    query += " order by " + sort_method 
+    query += ";"
     mycursor.execute(query)
 
     data='<title>Administrator Info</title>'
