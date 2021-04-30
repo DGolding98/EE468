@@ -361,8 +361,10 @@ def f3(request):
     semester = request.POST['semester']
     query = "select I.name, I.dept_name, COUNT(S.name) " + \
     "from instructor I, student S, teaches T, takes R " + \
-    "where I.ID = T.id AND T.course_id = R.course_id AND R.id = S.ID " + \
-    "and R.semester = \"" + semester + "\";"
+    "where I.ID = T.id AND T.course_id = R.course_id AND R.id = S.ID "
+    if semester != "":
+        query += "and R.semester = "  + semester 
+        query += ";"
     mycursor.execute(query)
 
     data='<title>Administrator Info</title>'
