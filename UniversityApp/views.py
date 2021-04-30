@@ -34,6 +34,7 @@ def professor(request):
             '<input type="submit" value="View students">' + \
         '</form>' + \
         '<p>Choose what to do.</p>' + \
+        '<p><a href="/">Home</a></p>' + \
         '<p><a href="/accounts/login/">Log Out</a></p>' + \
         '</body>' + \
         '</html>'
@@ -83,6 +84,7 @@ def professorCourses(request):
              '</t>')
         data += r
     data += '</table>'
+    data += '<a href="/professor/">Back</a>'
 
     mycursor.close()
     mydb.close()
@@ -140,6 +142,7 @@ def professorStudents(request):
              '</t>')
         data += r
     data += '</table>'
+    data += '<a href="/professor/">Back</a>'
 
     mycursor.close()
     mydb.close()
@@ -166,6 +169,7 @@ def student(request):
            '<input type="submit" value = "Submit">' + \
            '</form>' + \
            '<p>Click on the submit button to submit the form.</p>' + \
+           '<p><a href="/">Home</a></p>' + \
            '<p><a href="/accounts/login/">Log Out</a></p>' + \
            '</html>'
 
@@ -218,6 +222,7 @@ def studentResult(request):
              '</t>')
         data += r
     data += '</table>'
+    data += '<a href="/student/">Back</a>'
 
     mycursor.close()
     mydb.close()
@@ -253,6 +258,7 @@ def administrator(request):
             '<input type="submit" value = "View professors">' + \
         '</form>' + \
         '<p>Choose a function above.</p>' + \
+        '<p><a href="/">Home</a></p>' + \
         '<p><a href="/accounts/login/">Log Out</a></p>' + \
         '</body>' + \
         '</html>'
@@ -292,6 +298,7 @@ def f1(request):
                 '</t>')
         data += r
     data += '</table>'
+    data += '<a href="/admin/">Back</a>'
 
     mycursor.close()
     mydb.close()
@@ -327,6 +334,7 @@ def f2(request):
                 '</t>')
         data += r
     data += '</table>'
+    data += '<a href="/admin/">Back</a>'
 
     mycursor.close()
     mydb.close()
@@ -367,6 +375,9 @@ def f3(request):
                 '</t>')
         data += r
     data += '</table>'
+    data += '<a href="/admin/">Back</a>'
+
+    # data += '<a href="/">Home</a>'
 
     mycursor.close()
     mydb.close()
