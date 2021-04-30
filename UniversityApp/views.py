@@ -290,6 +290,7 @@ def f1(request):
     data='<title>Administrator Info</title>'
     data='<h1>Results:</h1>'
     data += '<table style="width:400px">'
+    data += '<tr><th>ID</th> <th>Name</th> <th>Dept</th> <th>Salary</th> </tr>'
     for (ID, name, dept, salary) in mycursor:
         r = ('<tr>' + \
                 '<th>' + str(ID) + '</th>' + \
@@ -327,6 +328,7 @@ def f2(request):
     data='<title>Administrator Info</title>'
     data='<h1>Results:</h1>'
     data += '<table style="width:400px">'
+    data += '<tr><th>Max</th> <th>Min</th> <th>Average</th></tr>'
     for (max, min, avg) in mycursor:
         r = ('<tr>' + \
                 '<th>' + str(max) + '</th>' + \
@@ -370,6 +372,7 @@ def f3(request):
     data='<title>Administrator Info</title>'
     data='<h1>Results:</h1>'
     data += '<table style="width:400px">'
+    data += '<tr><th>Name</th> <th>Dept</th> <th>Number of Students</th> </tr>'
     for (name, dept, count) in mycursor:
         r = ('<tr>' + \
                 '<th>' + str(name) + '</th>' + \
