@@ -23,7 +23,8 @@
   {% endif %}
 
 {% else %}
-  <p>You are not logged in.</p>
+  <h3>Whoops!</h3>
+  <p>You do not have permission to view this page.</p>
   <a href="{% url 'login' %}">Log In</a>
 {% endif %}
 {% endblock %}
